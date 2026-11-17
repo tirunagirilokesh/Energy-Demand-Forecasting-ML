@@ -1,0 +1,39 @@
+﻿# Environment variables and secrets
+.env
+.env.*
+!.env.example
+
+# Python
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+.pytest_cache/
+.mypy_cache/
+
+# Virtual environments
+.venv/
+venv/
+env/
+
+# Django database
+db.sqlite3
+
+# IDE and editor
+.vscode/
+.idea/
+
+# Temporary files
+~$*
+*.log
+
+# Documentation files (kept locally, not published)
+Documents/
+*.doc
+*.docx
+
+# OS files
+.DS_Store
+Thumbs.db
+# Large trained model
+media/models/rf.pkl

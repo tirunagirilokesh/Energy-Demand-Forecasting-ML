@@ -1,0 +1,264 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>🔮 Energy Demand Prediction Result</title>
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"/>
+
+    <style>
+        :root {
+            --bg: #0f172a;
+            --surface: rgba(30,41,59,0.7);
+            --text: #e2e8f0;
+            --text-muted: #94a3b8;
+            --primary: #60a5fa;
+            --accent: #34d399;
+            --low: #10b981;
+            --medium: #f59e0b;
+            --high: #ef4444;
+            --border: rgba(148,163,184,0.25);
+            --shadow: 0 8px 32px rgba(0,0,0,0.4);
+            --glass: blur(12px);
+        }
+
+        [data-theme="light"] {
+            --bg: #f8fafc;
+            --surface: rgba(255,255,255,0.8);
+            --text: #1e293b;
+            --text-muted: #64748b;
+            --border: rgba(226,232,240,0.7);
+            --shadow: 0 10px 40px rgba(0,0,0,0.08);
+        }
+
+        * { margin:0; padding:0; box-sizing:border-box; }
+
+        body {
+            font-family: 'Inter', system-ui, sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            min-height: 100vh;
+            transition: all 0.4s ease;
+        }
+
+        .bg-gradient {
+            position: fixed;
+            inset: 0;
+            background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
+            z-index: -1;
+        }
+
+        [data-theme="light"] .bg-gradient {
+            background: linear-gradient(135deg, #e0f2fe 0%, #f0fdfa 100%);
+        }
+
+        /* Navbar */
+        .navbar {
+            position: fixed;
+            top: 0; width: 100%;
+            background: var(--surface);
+            backdrop-filter: var(--glass);
+            border-bottom: 1px solid var(--border);
+            padding: 1rem 5%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            z-index: 1000;
+        }
+
+        .logo {
+            font-size: 1.6rem;
+            font-weight: 800;
+            display: flex;
+            align-items: center;
+            gap: 0.6rem;
+        }
+
+        .logo i { color: var(--primary); }
+
+        nav ul {
+            display: flex;
+            gap: 2.2rem;
+            list-style: none;
+        }
+
+        nav a {
+            color: var(--text);
+            text-decoration: none;
+            font-weight: 500;
+            transition: color 0.3s;
+        }
+
+        nav a:hover,
+        nav a.active { color: var(--accent); }
+
+        .theme-toggle {
+            background: none;
+            border: none;
+            font-size: 1.3rem;
+            cursor: pointer;
+            color: var(--text-muted);
+        }
+
+        .theme-toggle:hover { color: var(--accent); }
+
+        /* Result Content */
+        .result-container {
+            padding: 9rem 5% 6rem;
+            max-width: 900px;
+            margin: 0 auto;
+            text-align: center;
+        }
+
+        h1.result-value {
+            font-size: 4.5rem;
+            font-weight: 800;
+            margin: 1.5rem 0;
+            background: linear-gradient(90deg, var(--primary), var(--accent));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .level-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.8rem;
+            font-size: 1.6rem;
+            font-weight: 700;
+            padding: 0.8rem 1.8rem;
+            border-radius: 3rem;
+            margin: 1.5rem 0 2rem;
+        }
+
+        .level-low  { background: rgba(16,185,129,0.15); color: var(--low); border: 2px solid var(--low); }
+        .level-medium { background: rgba(245,158,11,0.15); color: var(--medium); border: 2px solid var(--medium); }
+        .level-high  { background: rgba(239,68,68,0.15); color: var(--high); border: 2px solid var(--high); }
+
+        .card {
+            background: var(--surface);
+            backdrop-filter: var(--glass);
+            border: 1px solid var(--border);
+            border-radius: 1.5rem;
+            padding: 2.5rem;
+            margin: 2rem 0;
+            box-shadow: var(--shadow);
+        }
+
+        .note {
+            font-size: 1.15rem;
+            color: var(--text-muted);
+            margin: 1.5rem 0;
+        }
+
+        .info {
+            font-size: 0.95rem;
+            color: var(--text-muted);
+            margin-top: 2rem;
+        }
+
+        .btn-again {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.8rem;
+            padding: 1rem 2.5rem;
+            font-size: 1.1rem;
+            font-weight: 600;
+            background: linear-gradient(90deg, var(--primary), #93c5fd);
+            color: #0f172a;
+            text-decoration: none;
+            border-radius: 3rem;
+            margin-top: 2rem;
+            box-shadow: 0 8px 25px rgba(96,165,250,0.3);
+            transition: all 0.35s;
+        }
+
+        .btn-again:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 14px 35px rgba(96,165,250,0.45);
+        }
+
+        @media (max-width: 768px) {
+            .result-container { padding: 7rem 5% 4rem; }
+            h1.result-value { font-size: 3.5rem; }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="bg-gradient"></div>
+
+    <!-- Navbar -->
+    <nav class="navbar">
+        <div class="logo">
+            <i class="fas fa-bolt"></i> Energy Forecast
+        </div>
+
+        <div style="display:flex; align-items:center; gap:2.5rem;">
+            <ul>
+                <li><a href="{% url 'index' %}">Home</a></li>
+                <li><a href="{% url 'train' %}">Train Models</a></li>
+                <li><a href="{% url 'predict' %}" class="active">Predict</a></li>
+                <li><a href="{% url 'overview' %}">Overview</a></li>
+            </ul>
+
+            <button class="theme-toggle" aria-label="Toggle theme">
+                <i class="fas fa-moon"></i>
+            </button>
+        </div>
+    </nav>
+
+    <!-- Result Section -->
+    <div class="result-container">
+        <h2>🔮 Prediction Result</h2>
+
+        <div class="card">
+            <p style="font-size: 1.2rem; margin-bottom: 1rem;">
+                <strong>Timestamp:</strong> {{ timestamp }}
+            </p>
+
+            <h1 class="result-value">{{ prediction }} kWh</h1>
+
+            <div class="level-badge 
+                {% if level == 'High / Peak Demand' %}level-high
+                {% elif level == 'Medium Demand' %}level-medium
+                {% else %}level-low{% endif %}">
+                <i class="fas 
+                    {% if level == 'High / Peak Demand' %}fa-exclamation-triangle
+                    {% elif level == 'Medium Demand' %}fa-balance-scale
+                    {% else %}fa-check-circle{% endif %}"></i>
+                {{ level }}
+            </div>
+            <div style="margin-top:2rem; padding:1.5rem; border-radius:1rem; background: rgba(96,165,250,0.08); border:1px solid var(--border);">
+                <h3 style="margin-bottom:0.8rem;">📌 Recommended Action</h3>
+                <p style="color: var(--text-muted); font-size:1rem;">
+                    {{ recommendation }}
+                </p>
+            </div>
+            <p class="note">
+                <strong>Interpretation:</strong> {{ note }}
+            </p>
+
+
+
+        <a href="{% url 'predict' %}" class="btn-again">
+            <i class="fas fa-redo"></i> Predict Again
+        </a>
+    </div>
+
+    <script>
+        // Theme toggle (same as other pages)
+        const toggle = document.querySelector('.theme-toggle');
+        const html = document.documentElement;
+
+        toggle.addEventListener('click', () => {
+            const current = html.getAttribute('data-theme');
+            html.setAttribute('data-theme', current === 'dark' ? 'light' : 'dark');
+            toggle.innerHTML = current === 'dark'
+                ? '<i class="fas fa-moon"></i>'
+                : '<i class="fas fa-sun"></i>';
+        });
+    </script>
+
+</body>
+</html>

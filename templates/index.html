@@ -1,0 +1,334 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>⚡ GridPulse • Energy Demand Intelligence</title>
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"/>
+
+    <style>
+        :root {
+            --bg: #0f172a;
+            --surface: rgba(30, 41, 59, 0.65);
+            --text: #e2e8f0;
+            --text-muted: #94a3b8;
+            --primary: #60a5fa;
+            --primary-dark: #3b82f6;
+            --accent: #34d399;
+            --accent-glow: rgba(52, 211, 153, 0.18);
+            --border: rgba(148, 163, 184, 0.18);
+            --shadow: 0 8px 32px rgba(0,0,0,0.35);
+            --glass-blur: blur(16px);
+        }
+
+        [data-theme="light"] {
+            --bg: #f8fafc;
+            --surface: rgba(255,255,255,0.72);
+            --text: #1e293b;
+            --text-muted: #64748b;
+            --border: rgba(226,232,240,0.8);
+            --shadow: 0 10px 40px rgba(0,0,0,0.08);
+        }
+
+        * { margin:0; padding:0; box-sizing:border-box; }
+
+        body {
+            font-family: 'Inter', system-ui, sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            min-height: 100vh;
+            transition: all 0.5s ease;
+        }
+
+        /* Animated Gradient Background */
+        .bg-gradient {
+            position: fixed;
+            inset: 0;
+            background: linear-gradient(135deg, #0f172a, #1e293b, #111827);
+            background-size: 300% 300%;
+            animation: gradientShift 18s ease infinite;
+            z-index: -2;
+        }
+
+        [data-theme="light"] .bg-gradient {
+            background: linear-gradient(135deg, #e0f2fe, #dbeafe, #f0fdfa);
+        }
+
+        @keyframes gradientShift {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        /* Navbar */
+        .navbar {
+            position: fixed;
+            top: 0; left: 0; right: 0;
+            background: var(--surface);
+            backdrop-filter: var(--glass-blur);
+            -webkit-backdrop-filter: var(--glass-blur);
+            border-bottom: 1px solid var(--border);
+            padding: 1.1rem 6%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            z-index: 1000;
+        }
+
+        .logo {
+            font-size: 1.7rem;
+            font-weight: 800;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .logo i { color: var(--primary); }
+
+        nav ul {
+            display: flex;
+            gap: 2.8rem;
+            list-style: none;
+        }
+
+        nav a {
+            color: var(--text);
+            text-decoration: none;
+            font-weight: 500;
+            position: relative;
+            transition: color 0.3s;
+        }
+
+        nav a::after {
+            content: '';
+            position: absolute;
+            width: 0; height: 2.5px;
+            bottom: -8px; left: 0;
+            background: var(--accent);
+            transition: width 0.4s ease;
+        }
+
+        nav a:hover::after,
+        nav a.active::after { width: 100%; }
+
+        nav a:hover,
+        nav a.active { color: var(--accent); }
+
+        .theme-toggle {
+            background: none;
+            border: none;
+            font-size: 1.4rem;
+            cursor: pointer;
+            color: var(--text-muted);
+            transition: color 0.3s;
+        }
+
+        .theme-toggle:hover { color: var(--accent); }
+
+        /* Hero */
+        .hero {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 8rem 6% 6rem;
+            text-align: center;
+            position: relative;
+        }
+
+        .hero-content {
+            max-width: 1100px;
+        }
+
+        .hero h1 {
+            font-size: clamp(3.5rem, 9vw, 6rem);
+            font-weight: 800;
+            line-height: 1.05;
+            margin-bottom: 1.6rem;
+        }
+
+        .hero .highlight {
+            background: linear-gradient(90deg, var(--primary), var(--accent));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .hero p {
+            font-size: 1.35rem;
+            color: var(--text-muted);
+            max-width: 780px;
+            margin: 0 auto 3rem;
+        }
+
+        /* Feature Cards */
+        .features {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 2rem;
+            margin: 4rem 0;
+        }
+
+        .feature-card {
+            background: var(--surface);
+            backdrop-filter: var(--glass-blur);
+            border: 1px solid var(--border);
+            border-radius: 1.5rem;
+            padding: 2.2rem 1.8rem;
+            box-shadow: var(--shadow);
+            transition: all 0.4s ease;
+        }
+
+        .feature-card:hover {
+            transform: translateY(-12px);
+            box-shadow: 0 20px 50px rgba(0,0,0,0.3);
+        }
+
+        .card-icon {
+            font-size: 2.8rem;
+            color: var(--accent);
+            margin-bottom: 1.2rem;
+        }
+
+        .card-title {
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin-bottom: 0.8rem;
+        }
+
+        .card-desc {
+            color: var(--text-muted);
+            font-size: 1.05rem;
+        }
+
+        /* CTA */
+        .cta-group {
+            display: flex;
+            justify-content: center;
+            gap: 1.8rem;
+            flex-wrap: wrap;
+        }
+
+        .btn {
+            padding: 1.2rem 2.6rem;
+            font-size: 1.15rem;
+            font-weight: 600;
+            border-radius: 3rem;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.8rem;
+            transition: all 0.35s ease;
+        }
+
+        .btn-primary {
+            background: linear-gradient(90deg, var(--primary), #93c5fd);
+            color: #0f172a;
+            box-shadow: 0 10px 30px rgba(96,165,250,0.35);
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-5px) scale(1.04);
+            box-shadow: 0 16px 40px rgba(96,165,250,0.45);
+        }
+
+        .btn-outline {
+            border: 2px solid var(--accent);
+            color: var(--accent);
+        }
+
+        .btn-outline:hover {
+            background: var(--accent);
+            color: #0f172a;
+        }
+
+        @media (max-width: 768px) {
+            .hero { padding: 6rem 5% 4rem; }
+            .features { gap: 1.5rem; }
+            .cta-group { flex-direction: column; }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="bg-gradient"></div>
+
+    <!-- Navbar -->
+    <nav class="navbar">
+        <div class="logo">
+            <i class="fas fa-bolt"></i> GridPulse
+        </div>
+
+        <div style="display:flex; align-items:center; gap:3rem;">
+            <ul>
+                <li><a href="{% url 'index' %}" class="active">Home</a></li>
+                <li><a href="{% url 'train' %}">Train</a></li>
+                <li><a href="{% url 'predict' %}">Predict</a></li>
+                <li><a href="{% url 'overview' %}">Overview</a></li>
+            </ul>
+            <button class="theme-toggle" aria-label="Toggle theme">
+                <i class="fas fa-moon"></i>
+            </button>
+        </div>
+    </nav>
+
+    <!-- Hero -->
+    <section class="hero">
+        <div class="hero-content">
+            <h1>Next-Gen <span class="highlight">Energy Demand</span> Forecasting</h1>
+            <p>
+                Accurate, weather-aware predictions powered by Neural Networks — helping utilities balance load, reduce waste, and build resilient smart grids.
+            </p>
+
+            <div class="cta-group">
+                <a href="{% url 'predict' %}" class="btn btn-primary">
+                    <i class="fas fa-bolt"></i> Forecast Now
+                </a>
+                <a href="{% url 'train' %}" class="btn btn-outline">
+                    <i class="fas fa-brain"></i> Train Models
+                </a>
+            </div>
+
+            <div class="features">
+                <div class="feature-card">
+                    <div class="card-icon"><i class="fas fa-temperature-high"></i></div>
+                    <div class="card-title">Weather + Temporal Intelligence</div>
+                    <div class="card-desc">Integrates temperature, humidity, wind, time-of-day, holidays & load patterns for high-precision forecasts.</div>
+                </div>
+
+                <div class="feature-card">
+                    <div class="card-icon"><i class="fas fa-chart-line"></i></div>
+                    <div class="card-title">Advanced ML Models</div>
+                    <div class="card-desc">Random Forest, Gradient Boosting, SVM & ANN — ensemble approaches for ~98%+ accuracy on real datasets.</div>
+                </div>
+
+                <div class="feature-card">
+                    <div class="card-icon"><i class="fas fa-lightbulb"></i></div>
+                    <div class="card-title">Smart Grid Optimization</div>
+                    <div class="card-desc">Low / Medium / High demand classification — enables proactive planning, peak shaving & sustainability gains.</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <script>
+        // Theme toggle
+        const toggle = document.querySelector('.theme-toggle');
+        const html = document.documentElement;
+
+        toggle.addEventListener('click', () => {
+            const isDark = html.getAttribute('data-theme') === 'dark';
+            html.setAttribute('data-theme', isDark ? 'light' : 'dark');
+            toggle.innerHTML = isDark 
+                ? '<i class="fas fa-moon"></i>' 
+                : '<i class="fas fa-sun"></i>';
+        });
+
+        // Optional: Navbar shrink on scroll
+        window.addEventListener('scroll', () => {
+            document.querySelector('.navbar').style.padding = window.scrollY > 80 ? '0.9rem 6%' : '1.1rem 6%';
+        });
+    </script>
+
+</body>
+</html>

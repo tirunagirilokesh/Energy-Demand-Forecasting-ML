@@ -1,0 +1,337 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>📊 Model Training Results</title>
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"/>
+
+    <style>
+        :root {
+            --bg: #0f172a;
+            --surface: rgba(30,41,59,0.75);
+            --text: #e2e8f0;
+            --text-muted: #94a3b8;
+            --primary: #60a5fa;
+            --accent: #34d399;
+            --border: rgba(148,163,184,0.25);
+            --shadow: 0 8px 32px rgba(0,0,0,0.4);
+            --glass: blur(12px);
+            --good: #10b981;
+            --warning: #f59e0b;
+            --danger: #ef4444;
+        }
+
+        [data-theme="light"] {
+            --bg: #f8fafc;
+            --surface: rgba(255,255,255,0.82);
+            --text: #1e293b;
+            --text-muted: #64748b;
+            --border: rgba(226,232,240,0.75);
+            --shadow: 0 10px 40px rgba(0,0,0,0.08);
+        }
+
+        * { margin:0; padding:0; box-sizing:border-box; }
+
+        body {
+            font-family: 'Inter', system-ui, sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            min-height: 100vh;
+            transition: all 0.4s ease;
+        }
+
+        .bg-gradient {
+            position: fixed;
+            inset: 0;
+            background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
+            z-index: -1;
+        }
+
+        [data-theme="light"] .bg-gradient {
+            background: linear-gradient(135deg, #e0f2fe 0%, #f0fdfa 100%);
+        }
+
+        /* Navbar */
+        .navbar {
+            position: fixed;
+            top: 0; width: 100%;
+            background: var(--surface);
+            backdrop-filter: var(--glass);
+            border-bottom: 1px solid var(--border);
+            padding: 1rem 5%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            z-index: 1000;
+        }
+
+        .logo {
+            font-size: 1.6rem;
+            font-weight: 800;
+            display: flex;
+            align-items: center;
+            gap: 0.6rem;
+        }
+
+        .logo i { color: var(--primary); }
+
+        nav ul {
+            display: flex;
+            gap: 2.2rem;
+            list-style: none;
+        }
+
+        nav a {
+            color: var(--text);
+            text-decoration: none;
+            font-weight: 500;
+            transition: color 0.3s;
+        }
+
+        nav a:hover,
+        nav a.active { color: var(--accent); }
+
+        .theme-toggle {
+            background: none;
+            border: none;
+            font-size: 1.3rem;
+            cursor: pointer;
+            color: var(--text-muted);
+        }
+
+        .theme-toggle:hover { color: var(--accent); }
+
+        /* Content */
+        .content {
+            padding: 9rem 5% 6rem;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        h1 {
+            font-size: 2.8rem;
+            font-weight: 800;
+            margin-bottom: 0.8rem;
+            background: linear-gradient(90deg, var(--primary), var(--accent));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        h3 {
+            font-size: 1.6rem;
+            margin: 3rem 0 1.5rem;
+            color: var(--primary);
+        }
+
+        .metrics-table {
+            width: 100%;
+            max-width: 900px;
+            border-collapse: collapse;
+            margin: 0 auto 3rem;
+            background: var(--surface);
+            backdrop-filter: var(--glass);
+            border: 1px solid var(--border);
+            border-radius: 1rem;
+            overflow: hidden;
+            box-shadow: var(--shadow);
+        }
+
+        .metrics-table th,
+        .metrics-table td {
+            padding: 1.1rem;
+            text-align: center;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .metrics-table th {
+            background: linear-gradient(90deg, var(--primary), #93c5fd);
+            color: #0f172a;
+            font-weight: 600;
+        }
+
+        .metrics-table tr:last-child td {
+            border-bottom: none;
+        }
+
+        .metrics-table td {
+            font-size: 1.05rem;
+        }
+
+        .graphs-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(480px, 1fr));
+            gap: 2.5rem;
+            margin: 3rem 0;
+        }
+
+        .graph-card {
+            background: var(--surface);
+            backdrop-filter: var(--glass);
+            border: 1px solid var(--border);
+            border-radius: 1.2rem;
+            padding: 1.5rem;
+            box-shadow: var(--shadow);
+            transition: transform 0.3s ease;
+        }
+
+        .graph-card:hover {
+            transform: translateY(-8px);
+        }
+
+        .graph-card h4 {
+            margin-bottom: 1rem;
+            color: var(--accent);
+            font-size: 1.3rem;
+        }
+
+        .graph-img {
+            width: 100%;
+            border-radius: 0.8rem;
+            border: 1px solid var(--border);
+        }
+
+        .btn-next {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.8rem;
+            padding: 1rem 2.5rem;
+            font-size: 1.1rem;
+            font-weight: 600;
+            background: linear-gradient(90deg, var(--primary), #93c5fd);
+            color: #0f172a;
+            text-decoration: none;
+            border-radius: 3rem;
+            margin-top: 2.5rem;
+            box-shadow: 0 8px 25px rgba(96,165,250,0.3);
+            transition: all 0.35s;
+        }
+
+        .btn-next:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 14px 35px rgba(96,165,250,0.45);
+        }
+
+        @media (max-width: 768px) {
+            .content { padding: 7rem 5% 4rem; }
+            .graphs-grid { grid-template-columns: 1fr; }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="bg-gradient"></div>
+
+    <!-- Navbar -->
+    <nav class="navbar">
+        <div class="logo">
+            <i class="fas fa-bolt"></i> Energy Forecast
+        </div>
+
+        <div style="display:flex; align-items:center; gap:2.5rem;">
+            <ul>
+                <li><a href="{% url 'index' %}">Home</a></li>
+                <li><a href="{% url 'train' %}" class="active">Train Models</a></li>
+                <li><a href="{% url 'predict' %}">Predict</a></li>
+                <li><a href="{% url 'overview' %}">Overview</a></li>
+            </ul>
+
+            <button class="theme-toggle" aria-label="Toggle theme">
+                <i class="fas fa-moon"></i>
+            </button>
+        </div>
+    </nav>
+
+    <!-- Training Results -->
+    <div class="content">
+        <h1>📊 Model Training & Evaluation Results</h1>
+
+        <h3>Performance Metrics Comparison</h3>
+
+        <table class="metrics-table">
+    <thead>
+        <tr>
+            <th>Model</th>
+            <th>MAE</th>
+            <th>RMSE</th>
+            <th>R² Score</th>
+            <th>Accuracy (%)</th>
+        </tr>
+    </thead>
+    <tbody>
+    <tr>
+        <td>Random Forest</td>
+        <td>{{ rf.MAE|floatformat:4 }}</td>
+        <td>{{ rf.RMSE|floatformat:4 }}</td>
+        <td>{{ rf.R2|floatformat:4 }}</td>
+        <td>{{ rf.accuracy|floatformat:2 }}%</td>
+    </tr>
+    <tr>
+        <td>Gradient Boosting</td>
+        <td>{{ gb.MAE|floatformat:4 }}</td>
+        <td>{{ gb.RMSE|floatformat:4 }}</td>
+        <td>{{ gb.R2|floatformat:4 }}</td>
+        <td>{{ gb.accuracy|floatformat:2 }}%</td>
+    </tr>
+    <tr>
+        <td>SVM</td>
+        <td>{{ svm.MAE|floatformat:4 }}</td>
+        <td>{{ svm.RMSE|floatformat:4 }}</td>
+        <td>{{ svm.R2|floatformat:4 }}</td>
+        <td>{{ svm.accuracy|floatformat:2 }}%</td>
+    </tr>
+    <tr>
+        <td>ANN</td>
+        <td>{{ ann.MAE|floatformat:4 }}</td>
+        <td>{{ ann.RMSE|floatformat:4 }}</td>
+        <td>{{ ann.R2|floatformat:4 }}</td>
+        <td>{{ ann.accuracy|floatformat:2 }}%</td>
+    </tr>
+</tbody>
+</table>
+        <h3>Visualization Insights</h3>
+
+        <div class="graphs-grid">
+            <div class="graph-card">
+                <h4>Actual vs Predicted Values</h4>
+                <img src="{{ g1 }}" alt="Actual vs Predicted" class="graph-img">
+            </div>
+
+            <div class="graph-card">
+                <h4>Residual Errors</h4>
+                <img src="{{ g2 }}" alt="Residual Plot" class="graph-img">
+            </div>
+
+            <div class="graph-card">
+                <h4>Error Distribution</h4>
+                <img src="{{ g3 }}" alt="Error Histogram" class="graph-img">
+            </div>
+
+            <div class="graph-card">
+                <h4>Feature Importance</h4>
+                <img src="{{ g4 }}" alt="Feature Importance" class="graph-img">
+            </div>
+        </div>
+
+        <a href="{% url 'predict' %}" class="btn-next">
+            <i class="fas fa-magic"></i> Go to Prediction Page
+        </a>
+    </div>
+
+    <script>
+        // Theme toggle
+        const toggle = document.querySelector('.theme-toggle');
+        const html = document.documentElement;
+
+        toggle.addEventListener('click', () => {
+            const current = html.getAttribute('data-theme');
+            html.setAttribute('data-theme', current === 'dark' ? 'light' : 'dark');
+            toggle.innerHTML = current === 'dark'
+                ? '<i class="fas fa-moon"></i>'
+                : '<i class="fas fa-sun"></i>';
+        });
+    </script>
+
+</body>
+</html>
